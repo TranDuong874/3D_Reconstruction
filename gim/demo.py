@@ -6,6 +6,8 @@ import torch
 import argparse
 import warnings
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import torchvision.transforms.functional as F
 
