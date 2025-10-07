@@ -11,7 +11,9 @@ matplotlib.use('agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import torchvision.transforms.functional as F
 
-from os.path import join
+import os
+from os.path import join, dirname, abspath
+
 from tools import get_padding_size
 from networks.roma.roma import RoMa
 from networks.loftr.loftr import LoFTR
@@ -20,6 +22,8 @@ from networks.loftr.config import get_cfg_defaults
 from networks.dkm.models.model_zoo.DKMv3 import DKMv3
 from networks.lightglue.superpoint import SuperPoint
 from networks.lightglue.models.matchers.lightglue import LightGlue
+
+BASE_DIR = dirname(abspath(__file__))
 
 DEFAULT_MIN_NUM_MATCHES = 4
 DEFAULT_RANSAC_MAX_ITER = 10
@@ -351,7 +355,7 @@ if __name__ == '__main__':
         })
 
     # weights path
-    checkpoints_path = join('weights', ckpt)
+    checkpoints_path = join(BASE_DIR,'weights', ckpt)
 
     # load state dict
     if args.model == 'gim_dkm':
@@ -404,9 +408,9 @@ if __name__ == '__main__':
     name0 = 'a1'
     name1 = 'a2'
     postfix = '.png'
-    image_dir = join('assets', 'demo')
-    img_path0 = join(image_dir, name0 + postfix)
-    img_path1 = join(image_dir, name1 + postfix)
+    image_dir = join(BASE_DIR,'assets', 'demo')
+    img_path0 = join(BASE_DIR,image_dir, name0 + postfix)
+    img_path1 = join(BASE_DIR,image_dir, name1 + postfix)
 
     image0 = read_image(img_path0)
     image1 = read_image(img_path1)
@@ -534,9 +538,9 @@ if __name__ == '__main__':
     out = fast_make_matching_figure(data, b_id=0)
     overlay = fast_make_matching_overlay(data, b_id=0)
     out = cv2.addWeighted(out, 1 - alpha, overlay, alpha, 0)
-    cv2.imwrite(join(image_dir, f'{name0}_{name1}_{args.model}_match.png'), out[..., ::-1])
+    cv2.imwrite(join(BASE_DIR,image_dir, f'{name0}_{name1}_{args.model}_match.png'), out[..., ::-1])
 
     geom_info = compute_geom(data)
     wrapped_images = wrap_images(image0, image1, geom_info,
                                  "Homography")
-    cv2.imwrite(join(image_dir, f'{name0}_{name1}_{args.model}_warp.png'), wrapped_images)
+    cv2.imwrite(join(BASE_DIR,image_dir, f'{name0}_{name1}_{args.model}_warp.png'), wrapped_images)
